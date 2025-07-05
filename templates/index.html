@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Classification - Agung vs Farhan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Klasifikasi Wajah Agung vs Farhan</h1>
+        <p>Upload gambar wajah atau gunakan kamera untuk klasifikasi</p>
+        
+        <!-- Tab untuk pilihan metode input -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('upload-tab')">Upload Gambar</button>
+            <button class="tab-btn" onclick="openTab('camera-tab')">Gunakan Kamera</button>
+        </div>
+        
+        <!-- Tab Upload Gambar -->
+        <div id="upload-tab" class="tab-content active">
+            <form action="/predict" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Pilih Gambar:</label>
+                    <input type="file" name="file" id="file" accept="image/*" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="model">Pilih Model:</label>
+                    <select name="model" id="model">
+                        <option value="svm">SVM (Recommended)</option>
+                        <option value="knn">K-Nearest Neighbors</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Klasifikasikan</button>
+            </form>
+        </div>
+        
+        <!-- Tab Kamera -->
+        <div id="camera-tab" class="tab-content">
+            <div class="camera-container">
+                <video id="camera-feed" autoplay playsinline></video>
+                <canvas id="camera-canvas" style="display: none;"></canvas>
+                
+                <div class="camera-controls">
+                    <button id="capture-btn" class="btn-capture">Ambil Foto</button>
+                    <button id="retake-btn" class="btn-retake" style="display: none;">Ulangi</button>
+                </div>
+                
+                <div id="capture-result" style="display: none;">
+                    <img id="captured-img" src="" alt="Foto yang diambil">
+                    <div class="form-group">
+                        <label for="camera-model">Pilih Model:</label>
+                        <select id="camera-model">
+                            <option value="svm">SVM (Recommended)</option>
+                            <option value="knn">K-Nearest Neighbors</option>
+                        </select>
+                    </div>
+                    <button id="classify-btn" class="btn-classify">Klasifikasikan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript untuk kamera -->
+    <script>
+        // Fungsi untuk beralih tab
+        function openTab(tabId) {
+            // Sembunyikan semua tab
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tombol tab aktif
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Elemen DOM
+        const video = document.getElementById('camera-feed');
+        const canvas = document.getElementById('camera-canvas');
+        const captureBtn = document.getElementById('capture-btn');
+        const retakeBtn = document.getElementById('retake-btn');
+        const classifyBtn = document.getElementById('classify-btn');
+        const capturedImg = document.getElementById('captured-img');
+        const captureResult = document.getElementById('capture-result');
+        
+        // Konteks untuk canvas
+        const ctx = canvas.getContext('2d');
+        
+        // Akses kamera
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                
+                // Set ukuran canvas sesuai dengan video
+                video.addEventListener('loadedmetadata', () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                });
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+            }
+        }
+        
+        // Ambil foto dari kamera
+        captureBtn.addEventListener('click', () => {
+            // Gambar frame video ke canvas
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Dapatkan gambar sebagai data URL
+            const imageData = canvas.toDataURL('image/jpeg');
+            
+            // Tampilkan gambar yang diambil
+            capturedImg.src = imageData;
+            captureResult.style.display = 'block';
+            
+            // Tampilkan tombol ulang
+            retakeBtn.style.display = 'inline-block';
+            
+            // Sembunyikan tombol ambil foto
+            captureBtn.style.display = 'none';
+            
+            // Hentikan stream kamera
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+        });
+        
+        // Ulangi pengambilan foto
+        retakeBtn.addEventListener('click', () => {
+            // Sembunyikan hasil
+            captureResult.style.display = 'none';
+            
+            // Tampilkan tombol ambil foto
+            captureBtn.style.display = 'inline-block';
+            
+            // Sembunyikan tombol ulang
+            retakeBtn.style.display = 'none';
+            
+            // Mulai ulang kamera
+            startCamera();
+        });
+        
+        // Klasifikasi gambar yang diambil
+        classifyBtn.addEventListener('click', async () => {
+            // Dapatkan gambar dari canvas
+            const imageData = canvas.toDataURL('image/jpeg');
+            
+            // Dapatkan model yang dipilih
+            const modelType = document.getElementById('camera-model').value;
+            
+            // Tampilkan loading
+            classifyBtn.textContent = 'Memproses...';
+            classifyBtn.disabled = true;
+            
+            try {
+                // Kirim gambar ke server
+                const response = await fetch('/predict_webcam', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: imageData,
+                        model: modelType
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                // Redirect ke halaman hasil
+                // Redirect ke halaman hasil dengan parameter
+                window.location.href = `/result?image_url=${encodeURIComponent(result.image_url)}&prediction=${result.prediction}&model_used=${result.model_used}`;
+                
+            } catch (error) {
+                console.error("Error classifying image:", error);
+                alert(`Error: ${error.message || 'Gagal melakukan klasifikasi'}`);
+            } finally {
+                classifyBtn.textContent = 'Klasifikasikan';
+                classifyBtn.disabled = false;
+            }
+        });
+        
+        // Mulai kamera saat halaman dimuat
+        startCamera();
+    </script>
+</body>
+</html>
