@@ -1,6 +1,6 @@
 Flask
 opencv-python
 scikit-image
-scikit-learn
+scikit-learn==1.6.1
 joblib
 numpy
