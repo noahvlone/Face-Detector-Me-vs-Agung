@@ -1,0 +1,288 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+    margin: 0;
+    padding: 0;
+    color: #222;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 850px;
+    margin: 50px auto;
+    padding: 32px 28px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+h1 {
+    text-align: center;
+    color: #2d3a4b;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+p {
+    text-align: center;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e0e0e0;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab-btn {
+    padding: 12px 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    color: #7f8c8d;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-bottom 0.2s;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+}
+
+.tab-btn.active, .tab-btn:hover {
+    color: #4f8cff;
+    border-bottom: 3px solid #4f8cff;
+    background: #f3f8ff;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2d3a4b;
+}
+
+input[type="file"], select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 7px;
+    font-size: 16px;
+    background: #f7fafd;
+    transition: border 0.2s;
+}
+
+input[type="file"]:focus, select:focus {
+    border: 1.5px solid #4f8cff;
+    outline: none;
+}
+
+button, .btn {
+    background: linear-gradient(90deg, #4f8cff 0%, #38e6c5 100%);
+    color: white;
+    border: none;
+    padding: 14px 0;
+    font-size: 17px;
+    border-radius: 7px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.08);
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    display: block;
+}
+
+button:hover, .btn:hover {
+    background: linear-gradient(90deg, #38e6c5 0%, #4f8cff 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.camera-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+    background: #f7fafd;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(79,140,255,0.07);
+    padding: 18px;
+}
+
+#camera-feed {
+    width: 100%;
+    max-height: 400px;
+    background-color: #333;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+.camera-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 12px;
+}
+
+.btn-capture {
+    background: linear-gradient(90deg, #ff6a6a 0%, #ffb86c 100%);
+}
+
+.btn-capture:hover {
+    background: linear-gradient(90deg, #ffb86c 0%, #ff6a6a 100%);
+}
+
+.btn-retake {
+    background: linear-gradient(90deg, #f39c12 0%, #f7b731 100%);
+}
+
+.btn-retake:hover {
+    background: linear-gradient(90deg, #f7b731 0%, #f39c12 100%);
+}
+
+.btn-classify {
+    background: linear-gradient(90deg, #38e6c5 0%, #4f8cff 100%);
+    margin-top: 18px;
+}
+
+.btn-classify:hover {
+    background: linear-gradient(90deg, #4f8cff 0%, #38e6c5 100%);
+}
+
+#captured-img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border: 2px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+.result-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 36px;
+    margin: 36px 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview {
+    flex: 1;
+    min-width: 320px;
+    max-width: 380px;
+    background: #f7fafd;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(79,140,255,0.07);
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview img {
+    width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+    transition: transform 0.2s;
+}
+
+.image-preview img:hover {
+    transform: scale(1.04) rotate(-2deg);
+}
+
+.prediction {
+    flex: 1;
+    min-width: 260px;
+    max-width: 340px;
+    background: #f7fafd;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(79,140,255,0.07);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.prediction-result {
+    font-size: 28px;
+    font-weight: bold;
+    color: #38e6c5;
+    text-align: center;
+    padding: 18px;
+    border: 2.5px solid #38e6c5;
+    border-radius: 8px;
+    background: #f8f9fa;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(56,230,197,0.08);
+    transition: background 0.2s, color 0.2s;
+}
+
+.prediction-result:hover {
+    background: #e6fcf7;
+    color: #4f8cff;
+}
+
+.btn {
+    background: linear-gradient(90deg, #95a5a6 0%, #4f8cff 100%);
+    color: white;
+    padding: 12px 0;
+    border-radius: 7px;
+    margin-top: 24px;
+    font-weight: 700;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.2s;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #4f8cff 0%, #95a5a6 100%);
+    transform: scale(1.03);
+}
+
+@media (max-width: 900px) {
+    .container {
+        max-width: 98vw;
+        padding: 18px 6vw;
+    }
+    .result-box {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .image-preview, .prediction {
+        max-width: 100%;
+    }
+}
