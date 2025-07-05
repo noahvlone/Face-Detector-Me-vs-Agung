@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Klasifikasi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hasil Klasifikasi</h1>
+        
+        <div class="result-box">
+            <div class="image-preview">
+                <img src="{{ image_url }}" 
+                     alt="Uploaded Image">
+            </div>
+            
+            <div class="prediction">
+                <h2>Prediksi:</h2>
+                <p class="prediction-result">{{ prediction }}</p>
+                <p><small>Menggunakan model: {{ model_used }}</small></p>
+            </div>
+        </div>
+        
+        <a href="/" class="btn">Klasifikasi Lagi</a>
+    </div>
+</body>
+</html>
